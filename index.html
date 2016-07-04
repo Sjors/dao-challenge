@@ -8,7 +8,7 @@ web3.eth.defaultAccount = web3.eth.accounts[1];
 
 function getTokenBalance() {
 	var param = document.getElementById('query').value;
-	var res = contracts['DaoChallenge'].contract.getTokenBalace();
+	var res = contracts['DaoChallenge'].contract.tokenBalanceOf(web3.eth.defaultAccount);
 	document.getElementById('queryres').innerText = res;
 }
 

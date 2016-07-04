@@ -9,7 +9,7 @@ contract DaoChallenge
 	event notifyTerminate(uint256 finalBalance);
 
 	/* This creates an array with all balances */
-  mapping (address => uint256) tokenBalanceOf;
+  mapping (address => uint256) public tokenBalanceOf;
 
 	uint256 constant tokenPrice = 1000000000000000; // 1 finney
 
@@ -27,10 +27,6 @@ contract DaoChallenge
 		}
 		tokenBalanceOf[sender] = msg.value / tokenPrice; // rounded down
 		notifySellToken(tokenBalanceOf[sender], sender);
-	}
-
-	function getTokenBalace() noEther constant returns (uint256 tokenBalance) {
-		return tokenBalanceOf[msg.sender] | 0;
 	}
 
 	function refund() noEther {

@@ -12,12 +12,14 @@
 	"type": "function"
 }, {
 	"constant": true,
-	"inputs": [],
-	"name": "getTokenBalace",
+	"inputs": [{
+		"name": "",
+		"type": "address"
+	}],
+	"name": "tokenBalanceOf",
 	"outputs": [{
-		"name": "tokenBalance",
-		"type": "uint256",
-		"value": "0"
+		"name": "",
+		"type": "uint256"
 	}],
 	"type": "function"
 }, {
