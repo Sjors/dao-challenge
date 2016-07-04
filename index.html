@@ -1,0 +1,25 @@
+<!doctype>
+<html>
+<head>
+<script type='text/javascript'>
+
+// Attacker point of view:
+web3.eth.defaultAccount = web3.eth.accounts[1];
+
+function getTokenBalance() {
+	var param = document.getElementById('query').value;
+	var res = contracts['DaoChallenge'].contract.getTokenBalace();
+	document.getElementById('queryres').innerText = res;
+}
+
+</script>
+</head>
+<body bgcolor='#E6E6FA'>
+	<h3>Attacker token balance</h3>
+<div>
+Query:
+	<input value='getTokenBalance' type='button' id='query' onclick='getTokenBalance()' />
+	<div id='queryres'></div>
+</div>
+</body>
+</html>
