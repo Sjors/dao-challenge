@@ -16,6 +16,13 @@ contract DaoChallenge
 	// Owner of the challenge; a real DAO doesn't an owner.
 	address owner;
 
+	function sendOrThrow(address destination, uint256 amount) {
+		bool result = destination.send(amount);
+		if (!result) {
+			throw;
+		}
+	}
+
 	function DaoChallenge () {
 		owner = msg.sender; // Owner of the challenge. Don't use this in a real DAO.
 	}
@@ -34,7 +41,7 @@ contract DaoChallenge
 		uint256 tokenBalance = tokenBalanceOf[sender];
 		if (tokenBalance <= 0) { throw; }
 		tokenBalanceOf[sender] = 0;
-		sender.send(tokenBalance * tokenPrice);
+		sendOrThrow(sender, tokenBalance * tokenPrice);
 		notifyRefundToken(tokenBalance, sender);
 	}
 
