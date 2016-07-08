@@ -39,7 +39,7 @@ contract DaoChallenge
 	function refund() noEther {
 		address sender = msg.sender;
 		uint256 tokenBalance = tokenBalanceOf[sender];
-		if (tokenBalance <= 0) { throw; }
+		if (tokenBalance == 0) { throw; }
 		tokenBalanceOf[sender] = 0;
 		sendOrThrow(sender, tokenBalance * tokenPrice);
 		notifyRefundToken(tokenBalance, sender);
