@@ -29,15 +29,14 @@ contract DaoChallenge
 
 	function () {
 		address sender = msg.sender;
-		if(tokenBalanceOf[sender] != 0) {
-			throw;
-		}
+		uint256 amount = msg.value;
+
 		// No fractional tokens:
-		if (msg.value % tokenPrice != 0) {
+		if (amount % tokenPrice != 0) {
 			throw;
 		}
-		tokenBalanceOf[sender] = msg.value / tokenPrice;
-		notifySellToken(tokenBalanceOf[sender], sender);
+		tokenBalanceOf[sender] += amount / tokenPrice;
+		notifySellToken(amount, sender);
 	}
 
 	function refund() noEther {
