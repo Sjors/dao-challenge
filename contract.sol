@@ -32,7 +32,11 @@ contract DaoChallenge
 		if(tokenBalanceOf[sender] != 0) {
 			throw;
 		}
-		tokenBalanceOf[sender] = msg.value / tokenPrice; // rounded down
+		// No fractional tokens:
+		if (msg.value % tokenPrice != 0) {
+			throw;
+		}
+		tokenBalanceOf[sender] = msg.value / tokenPrice;
 		notifySellToken(tokenBalanceOf[sender], sender);
 	}
 
