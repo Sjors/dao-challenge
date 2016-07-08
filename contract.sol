@@ -6,6 +6,7 @@ contract DaoChallenge
 
 	event notifySellToken(uint256 n, address buyer);
 	event notifyRefundToken(uint256 n, address tokenHolder);
+	event notifyTranferToken(uint256 n, address sender, address recipient);
 	event notifyTerminate(uint256 finalBalance);
 
 	/* This creates an array with all balances */
@@ -46,6 +47,16 @@ contract DaoChallenge
 		tokenBalanceOf[sender] = 0;
 		sendOrThrow(sender, tokenBalance * tokenPrice);
 		notifyRefundToken(tokenBalance, sender);
+	}
+
+	function transfer(address recipient, uint256 tokens) noEther {
+		address sender = msg.sender;
+
+		if (tokenBalanceOf[sender] < tokens) throw;
+		if (tokenBalanceOf[recipient] + tokens < tokenBalanceOf[recipient]) throw; // Check for overflows
+		tokenBalanceOf[sender] -= tokens;
+		tokenBalanceOf[recipient] += tokens;
+		notifyTranferToken(tokens, sender, recipient);       
 	}
 
 	// The owner of the challenge can terminate it. Don't use this in a real DAO.

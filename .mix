@@ -27,8 +27,8 @@
 				{
 					"address": "06400992be45bc64a52b5c55d3df84596d6cb4a1",
 					"balance": {
-						"unit": 12,
-						"value": "1"
+						"unit": 13,
+						"value": "100"
 					},
 					"name": "attacker",
 					"secret": "db95780d2f30ca8211eec37cc110cc58a2d4f9308dea00ede6717a585efa2eb7"
@@ -41,6 +41,15 @@
 					},
 					"name": "miner",
 					"secret": "090f51d202f847d2468fc87fb06f92c469b8a1927b4aecea796b6831f1331382"
+				},
+				{
+					"address": "cd0b97ccf9cfaae127d738dfd2a739aec9eddcd3",
+					"balance": {
+						"unit": 13,
+						"value": "100"
+					},
+					"name": "Alice",
+					"secret": "decada70612d8e31c24967b3339cb32541966d8575dc61128fcc9a5c20ac8830"
 				}
 			],
 			"blocks": [
@@ -75,9 +84,117 @@
 				},
 				{
 					"hash": "",
+					"number": 2,
+					"status": "mined",
+					"transactions": [
+						{
+							"contractId": "<DaoChallenge - 0>",
+							"functionId": "<none>",
+							"gas": {
+								"value": "42646"
+							},
+							"gasAuto": true,
+							"gasPrice": {
+								"unit": 18,
+								"value": "100000"
+							},
+							"isContractCreation": false,
+							"isFunctionCall": false,
+							"label": "0xf025d81196b72fba60a1d4dddad12eeb8360d828",
+							"parameters": {},
+							"saveStatus": true,
+							"sender": "db95780d2f30ca8211eec37cc110cc58a2d4f9308dea00ede6717a585efa2eb7",
+							"value": {
+								"unit": 13,
+								"value": "3"
+							}
+						}
+					]
+				},
+				{
+					"hash": "",
+					"number": 3,
+					"status": "mined",
+					"transactions": [
+						{
+							"contractId": "<DaoChallenge - 0>",
+							"functionId": "transfer",
+							"gas": {
+								"value": "50616"
+							},
+							"gasAuto": true,
+							"gasPrice": {
+								"unit": 18,
+								"value": "100000"
+							},
+							"isContractCreation": false,
+							"isFunctionCall": true,
+							"label": "<DaoChallenge - 0>.transfer()",
+							"parameters": {
+								"recipient": "0xcd0b97ccf9cfaae127d738dfd2a739aec9eddcd3",
+								"tokens": "1"
+							},
+							"saveStatus": true,
+							"sender": "db95780d2f30ca8211eec37cc110cc58a2d4f9308dea00ede6717a585efa2eb7",
+							"value": {
+								"unit": 18,
+								"value": "0"
+							}
+						},
+						{
+							"contractId": "<DaoChallenge - 0>",
+							"functionId": "refund",
+							"gas": {
+								"value": "19968"
+							},
+							"gasAuto": true,
+							"gasPrice": {
+								"unit": 18,
+								"value": "100000"
+							},
+							"isContractCreation": false,
+							"isFunctionCall": true,
+							"label": "<DaoChallenge - 0>.refund()",
+							"parameters": {},
+							"saveStatus": true,
+							"sender": "decada70612d8e31c24967b3339cb32541966d8575dc61128fcc9a5c20ac8830",
+							"value": {
+								"unit": 18,
+								"value": "0"
+							}
+						}
+					]
+				},
+				{
+					"hash": "",
 					"number": -1,
 					"status": "pending",
-					"transactions": []
+					"transactions": [
+						{
+							"contractId": "<DaoChallenge - 0>",
+							"functionId": "tokenBalanceOf",
+							"gas": {
+								"value": "23091"
+							},
+							"gasAuto": true,
+							"gasPrice": {
+								"unit": 18,
+								"value": "100000"
+							},
+							"isContractCreation": false,
+							"isFunctionCall": true,
+							"label": "<DaoChallenge - 0>.tokenBalanceOf()",
+							"parameters": {
+								"0": "0xcd0b97ccf9cfaae127d738dfd2a739aec9eddcd3"
+							},
+							"saveStatus": true,
+							"sender": "decada70612d8e31c24967b3339cb32541966d8575dc61128fcc9a5c20ac8830",
+							"value": {
+								"unit": 18,
+								"value": "0"
+							}
+						}
+					]
 				}
 			],
 			"contracts": [],
@@ -85,6 +202,8 @@
 				"address": "fa4b795b491cc1975e89f3c78972c3e2e827c882",
 				"balance": {
 					"objectName": "",
+					"value": "0",
+					"unit": 18,
 					"value": "0",
 					"unit": 18
 				},
