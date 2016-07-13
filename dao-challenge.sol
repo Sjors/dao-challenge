@@ -34,7 +34,7 @@ contract DaoChallenge
 	}
 
 	// This uses call.value()() rather than send(), but only sends to msg.sender
-	function withdrawEtherOrThrow(uint256 amount) {
+	function withdrawEtherOrThrow(uint256 amount) private {
 		bool result = msg.sender.call.value(amount)();
 		if (!result) {
 			throw;
