@@ -84,14 +84,14 @@
 				},
 				{
 					"hash": "",
-					"number": -1,
-					"status": "pending",
+					"number": 2,
+					"status": "mined",
 					"transactions": [
 						{
 							"contractId": "<DaoChallenge - 0>",
-							"functionId": "createAccount",
+							"functionId": "buyTokens",
 							"gas": {
-								"value": "375561"
+								"value": "21417"
 							},
 							"gasAuto": true,
 							"gasPrice": {
@@ -100,7 +100,36 @@
 							},
 							"isContractCreation": false,
 							"isFunctionCall": true,
-							"label": "<DaoChallenge - 0>.createAccount()",
+							"label": "<DaoChallenge - 0>.buyTokens()",
+							"parameters": {},
+							"saveStatus": true,
+							"sender": "db95780d2f30ca8211eec37cc110cc58a2d4f9308dea00ede6717a585efa2eb7",
+							"value": {
+								"unit": 13,
+								"value": "2"
+							}
+						}
+					]
+				},
+				{
+					"hash": "",
+					"number": -1,
+					"status": "pending",
+					"transactions": [
+						{
+							"contractId": "<DaoChallenge - 0>",
+							"functionId": "refund",
+							"gas": {
+								"value": "279344"
+							},
+							"gasAuto": true,
+							"gasPrice": {
+								"unit": 18,
+								"value": "100000"
+							},
+							"isContractCreation": false,
+							"isFunctionCall": true,
+							"label": "<DaoChallenge - 0>.refund()",
 							"parameters": {},
 							"saveStatus": true,
 							"sender": "db95780d2f30ca8211eec37cc110cc58a2d4f9308dea00ede6717a585efa2eb7",

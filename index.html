@@ -6,9 +6,8 @@
 // Attacker point of view:
 web3.eth.defaultAccount = web3.eth.accounts[1];
 
-function getTokenBalance() {
-	var param = document.getElementById('query').value;
-	var res = contracts['DaoChallenge'].contract.tokenBalanceOf(web3.eth.defaultAccount);
+function get() {
+	var res = contracts['DaoChallenge'].contract.daoAccountAddressFor(web3.eth.defaultAccount);
 	document.getElementById('queryres').innerText = res;
 }
 
@@ -18,7 +17,7 @@ function getTokenBalance() {
 	<h3>Attacker token balance</h3>
 <div>
 Query:
-	<input value='getTokenBalance' type='button' id='query' onclick='getTokenBalance()' />
+	<input value='getAccountAddress' type='button' id='query' onclick='get()' />
 	<div id='queryres'></div>
 </div>
 </body>
