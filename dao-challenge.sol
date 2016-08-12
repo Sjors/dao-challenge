@@ -17,6 +17,7 @@ contract DaoChallenge
 	event notifyNewAccount(address owner, address account);
 	event notifyBuyToken(address owner, uint256 tokens, uint256 price);
 	event notifyWithdraw(address owner, uint256 tokens);
+	event notifyTransfer(address owner, address recipient, uint256 tokens);
 
 	/**************************
 	     Public variables
@@ -70,6 +71,20 @@ contract DaoChallenge
 	     Public functions
 	***************************/
 
+	function createAccount () {
+		accountFor(msg.sender, true);
+	}
+
+	// Check if a given account belongs to this DaoChallenge.
+	function isMember (DaoAccount account, address allegedOwnerAddress) returns (bool) {
+		if (account == DaoAccount(0x00)) return false;
+		if (allegedOwnerAddress == 0x00) return false;
+		if (daoAccounts[allegedOwnerAddress] == DaoAccount(0x00)) return false;
+		// allegedOwnerAddress is passed in for performance reasons, but not trusted
+		if (daoAccounts[allegedOwnerAddress] != account) return false;
+		return true;
+	}
+
 	function getTokenBalance () constant noEther returns (uint256 tokens) {
 		DaoAccount account = accountFor(msg.sender, false);
 		if (account == DaoAccount(0x00)) return 0;
@@ -90,6 +105,17 @@ contract DaoChallenge
 
 		account.withdraw(tokens);
 		notifyWithdraw(msg.sender, tokens);
+	}
+
+	function transfer(uint256 tokens, address recipient) noEther {
+		DaoAccount account = accountFor(msg.sender, false);
+		if (account == DaoAccount(0x00)) throw;
+
+		DaoAccount recipientAcc = accountFor(recipient, false);
+		if (recipientAcc == DaoAccount(0x00)) throw;
+
+		account.transfer(tokens, recipientAcc);
+		notifyTransfer(msg.sender, recipient, tokens);
 	}
 
 	// The owner of the challenge can terminate it. Don't use this in a real DAO.

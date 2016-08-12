@@ -1,3 +1,7 @@
+contract AbstractDaoChallenge {
+	function isMember (DaoAccount account, address allegedOwnerAddress) returns (bool);
+}
+
 contract DaoAccount
 {
 	/**************************
@@ -66,6 +70,10 @@ contract DaoAccount
 			 Public functions
 	***************************/
 
+	function getOwnerAddress() constant returns (address ownerAddress) {
+		return owner;
+	}
+
 	function getTokenBalance() constant returns (uint256 tokens) {
 		return tokenBalance;
 	}
@@ -90,6 +98,27 @@ contract DaoAccount
 		if (tokens == 0 || tokenBalance == 0 || tokenBalance < tokens) throw;
 		tokenBalance -= tokens;
 		if(!owner.call.value(tokens * tokenPrice)()) throw;
+	}
+
+	function transfer(uint256 tokens, DaoAccount recipient) noEther onlyDaoChallenge {
+		if (tokens == 0 || tokenBalance == 0 || tokenBalance < tokens) throw;
+		tokenBalance -= tokens;
+		recipient.receiveTokens.value(tokens * tokenPrice)(tokens);
+	}
+
+	function receiveTokens(uint256 tokens) {
+		// Check that the sender is a DaoAccount and belongs to our DaoChallenge
+		DaoAccount sender = DaoAccount(msg.sender);
+		if (!AbstractDaoChallenge(daoChallenge).isMember(sender, sender.getOwnerAddress())) throw;
+
+		uint256 amount = msg.value;
+
+		// No zero transfer:
+		if (amount == 0) throw;
+
+		if (amount / tokenPrice != tokens) throw;
+
+		tokenBalance += tokens;
 	}
 
 	// The owner of the challenge can terminate it. Don't use this in a real DAO.
