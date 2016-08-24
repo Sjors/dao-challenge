@@ -1,5 +1,6 @@
 contract AbstractDaoChallenge {
 	function isMember (DaoAccount account, address allegedOwnerAddress) returns (bool);
+	function tokenPrice() returns (uint256);
 }
 
 contract DaoAccount
@@ -29,10 +30,7 @@ contract DaoAccount
 	***************************/
 
 	uint256 tokenBalance; // number of tokens in this account
-  address owner;        // owner of the otkens
-	uint256 tokenPrice;
-
-
+  address owner;        // owner of the tokens
 
 	/**************************
 			     Modifiers
@@ -50,9 +48,8 @@ contract DaoAccount
 	 Constructor and fallback
 	**************************/
 
-  function DaoAccount (address _owner, uint256 _tokenPrice, address _challengeOwner) noEther {
+  function DaoAccount (address _owner, address _challengeOwner) noEther {
     owner = _owner;
-		tokenPrice = _tokenPrice;
     daoChallenge = msg.sender;
 		tokenBalance = 0;
 
@@ -82,6 +79,7 @@ contract DaoAccount
 
 	function buyTokens() onlyDaoChallenge returns (uint256 tokens) {
 		uint256 amount = msg.value;
+		uint256 tokenPrice = AbstractDaoChallenge(daoChallenge).tokenPrice();
 
 		// No free tokens:
 		if (amount == 0) throw;
@@ -96,16 +94,11 @@ contract DaoAccount
 		return tokens;
 	}
 
-	function withdraw(uint256 tokens) noEther onlyDaoChallenge {
-		if (tokens == 0 || tokenBalance == 0 || tokenBalance < tokens) throw;
-		tokenBalance -= tokens;
-		if(!owner.call.value(tokens * tokenPrice)()) throw;
-	}
-
 	function transfer(uint256 tokens, DaoAccount recipient) noEther onlyDaoChallenge {
 		if (tokens == 0 || tokenBalance == 0 || tokenBalance < tokens) throw;
+		if (tokenBalance - tokens > tokenBalance) throw; // Overflow
 		tokenBalance -= tokens;
-		recipient.receiveTokens.value(tokens * tokenPrice)(tokens);
+		recipient.receiveTokens(tokens);
 	}
 
 	function receiveTokens(uint256 tokens) {
@@ -113,12 +106,10 @@ contract DaoAccount
 		DaoAccount sender = DaoAccount(msg.sender);
 		if (!AbstractDaoChallenge(daoChallenge).isMember(sender, sender.getOwnerAddress())) throw;
 
-		uint256 amount = msg.value;
+		if (tokens > sender.getTokenBalance()) throw;
 
-		// No zero transfer:
-		if (amount == 0) throw;
-
-		if (amount / tokenPrice != tokens) throw;
+		// Protect against overflow:
+		if (tokenBalance + tokens < tokenBalance) throw;
 
 		tokenBalance += tokens;
 	}

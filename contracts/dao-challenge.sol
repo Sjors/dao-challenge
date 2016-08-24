@@ -16,7 +16,6 @@ contract DaoChallenge
 
 	event notifyNewAccount(address owner, address account);
 	event notifyBuyToken(address owner, uint256 tokens, uint256 price);
-	event notifyWithdraw(address owner, uint256 tokens);
 	event notifyTransfer(address owner, address recipient, uint256 tokens);
 
 	/**************************
@@ -65,7 +64,7 @@ contract DaoChallenge
 		DaoAccount account = daoAccounts[accountOwner];
 
 		if(account == DaoAccount(0x00) && createNew) {
-			account = new DaoAccount(accountOwner, tokenPrice, challengeOwner);
+			account = new DaoAccount(accountOwner, challengeOwner);
 			daoAccounts[accountOwner] = account;
 			notifyNewAccount(accountOwner, address(account));
 		}
@@ -135,14 +134,6 @@ contract DaoChallenge
 		notifyBuyToken(msg.sender, tokens, msg.value);
 		return tokens;
  	}
-
-	function withdraw(uint256 tokens) noEther {
-		DaoAccount account = accountFor(msg.sender, false);
-		if (account == DaoAccount(0x00)) throw;
-
-		account.withdraw(tokens);
-		notifyWithdraw(msg.sender, tokens);
-	}
 
 	function transfer(uint256 tokens, address recipient) noEther {
 		DaoAccount account = accountFor(msg.sender, false);
