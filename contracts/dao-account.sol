@@ -18,6 +18,11 @@ contract DaoAccount
 	     Public variables
 	***************************/
 
+	address public daoChallenge; // the DaoChallenge this account belongs to
+
+	// Owner of the challenge with backdoor access.
+  // Remove for a real DAO contract:
+  address public challengeOwner;
 
 	/**************************
 	     Private variables
@@ -25,12 +30,9 @@ contract DaoAccount
 
 	uint256 tokenBalance; // number of tokens in this account
   address owner;        // owner of the otkens
-	address daoChallenge; // the DaoChallenge this account belongs to
 	uint256 tokenPrice;
 
-  // Owner of the challenge with backdoor access.
-  // Remove for a real DAO contract:
-  address challengeOwner;
+
 
 	/**************************
 			     Modifiers
