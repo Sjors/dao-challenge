@@ -17,6 +17,8 @@ contract DaoChallenge
 	event notifyNewAccount(address owner, address account);
 	event notifyBuyToken(address owner, uint256 tokens, uint256 price);
 	event notifyTransfer(address owner, address recipient, uint256 tokens);
+  event notifyPlaceSellOrder(uint256 tokens, uint256 price);
+  event notifyCancelSellOrder();
 
 	/**************************
 	     Public variables
@@ -29,6 +31,8 @@ contract DaoChallenge
 	uint256 public tokenPrice = 1000000000000000; // 1 finney
 
 	mapping (address => DaoAccount) public daoAccounts;
+  mapping (address => SellOrder) public sellOrders;
+
   // Owner of the challenge; a real DAO doesn't an owner.
   address public challengeOwner;
 
@@ -144,6 +148,34 @@ contract DaoChallenge
 		account.transfer(tokens, recipientAcc);
 		notifyTransfer(msg.sender, recipient, tokens);
 	}
+
+  function placeSellOrder(uint256 tokens, uint256 price) noEther returns (SellOrder) {
+    DaoAccount account = accountFor(msg.sender, false);
+    if (account == DaoAccount(0x00)) throw;
+
+    SellOrder order = account.placeSellOrder(tokens, price);
+
+    sellOrders[address(order)] = order;
+
+    notifyPlaceSellOrder(tokens, price);
+    return order;
+  }
+
+  function cancelSellOrder(address addr) noEther {
+    DaoAccount account = accountFor(msg.sender, false);
+    if (account == DaoAccount(0x00)) throw;
+
+    SellOrder order = sellOrders[addr];
+    if (order == SellOrder(0x00)) throw;
+
+    if (order.owner() != address(account)) throw;
+
+    sellOrders[addr] = SellOrder(0x00);
+
+    account.cancelSellOrder(order);
+
+    notifyCancelSellOrder();
+  }
 
 	// The owner of the challenge can terminate it. Don't use this in a real DAO.
 	function terminate() noEther onlyChallengeOwner {

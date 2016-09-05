@@ -25,6 +25,10 @@ contract DaoChallenge {
   function setTokenPrice (uint256 price) {
     tokenPrice = price;
   }
+
+  function placeSellOrder (DaoAccount account, uint256 n, uint256 price) returns (SellOrder) {
+    return account.placeSellOrder(n, price);
+  }
 }
 
 contract User {
@@ -39,6 +43,9 @@ contract User {
   }
   function transfer (DaoChallenge chal, User recipient, uint256 tokens) {
     chal.transfer(account, recipient.account(), tokens);
+  }
+  function placeSellOrder (DaoChallenge chal, uint256 n, uint256 price) returns (SellOrder) {
+    return chal.placeSellOrder(account, n, price);
   }
 }
 
@@ -154,7 +161,21 @@ contract DaoAccountReceiveTokensTest is DaoAccountTest {
   function setUp() {
     super.setUp();
 
+
+  }
+}
+
+contract DaoAccountPlaceSellOrderTest is DaoAccountTest {
+  function setUp() {
+    super.setUp();
+
     // Buy ten tokens
     userA.buyTokens(chal, chal.tokenPrice() * 10);
+  }
+
+  function testSellTwoTokens () {
+    // Offer to sell 2 tokens for 10 wei each
+    userA.placeSellOrder(chal, 2, 10);
+    assertEq(acc.getTokenBalance(), 8);
   }
 }

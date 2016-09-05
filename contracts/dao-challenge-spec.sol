@@ -7,6 +7,14 @@ contract User {
     return chal.buyTokens.value(n * chal.tokenPrice())();
   }
 
+  function placeSellOrder (DaoChallenge chal, uint256 n, uint256 price) returns (SellOrder) {
+    return chal.placeSellOrder(n, price);
+  }
+
+  function cancelSellOrder (DaoChallenge chal, address addr) {
+    chal.cancelSellOrder(addr);
+  }
+
   function getTokenBalance (DaoChallenge chal) returns (uint256) {
     return chal.getTokenBalance();
   }
@@ -64,3 +72,42 @@ contract DaoChallengeBuyTokensTest is DaoChallengeTest {
   }
 }
 
+contract DaoChallengePlaceSellOrderTest is DaoChallengeTest {
+  function setUp() {
+    super.setUp();
+
+    // Challenge owner issues tokens, user A buys 10:
+    chal.issueTokens(1000, 1, 32503680000);
+    userA.buyTokens(chal, 10);
+  }
+
+  function testSellTwoTokens () {
+    // Offer to sell 2 tokens for 1 finney each
+    userA.placeSellOrder(chal, 2, 1000);
+  }
+}
+
+contract DaoChallengeCancelSellOrderTest is DaoChallengeTest {
+  SellOrder order;
+
+  function setUp() {
+    super.setUp();
+
+    // Challenge owner issues tokens, user A buys 10:
+    chal.issueTokens(1000, 1, 32503680000);
+    userA.buyTokens(chal, 10);
+
+    // Place a sell order
+    order = userA.placeSellOrder(chal, 2, 1000);
+  }
+
+  function testCancelSellOrder () {
+    userA.cancelSellOrder(chal, address(order));
+    assertEq(userA.getTokenBalance(chal), 10);
+  }
+
+  function testThrowCancelSellOrderTwice () {
+    userA.cancelSellOrder(chal, address(order));
+    userA.cancelSellOrder(chal, address(order));
+  }
+}

@@ -1,3 +1,5 @@
+import "./sell-order.sol";
+
 contract AbstractDaoChallenge {
 	function isMember (DaoAccount account, address allegedOwnerAddress) returns (bool);
 	function tokenPrice() returns (uint256);
@@ -113,6 +115,21 @@ contract DaoAccount
 
 		tokenBalance += tokens;
 	}
+
+  function placeSellOrder(uint256 tokens, uint256 price) noEther onlyDaoChallenge returns (SellOrder) {
+    if (tokens == 0 || tokenBalance == 0 || tokenBalance < tokens) throw;
+    if (tokenBalance - tokens > tokenBalance) throw; // Overflow
+    tokenBalance -= tokens;
+
+    SellOrder order = new SellOrder(tokens, price, challengeOwner);
+    return order;
+  }
+
+  function cancelSellOrder(SellOrder order) noEther onlyDaoChallenge {
+    uint256 tokens = order.tokens();
+    tokenBalance += tokens;
+    order.cancel();
+  }
 
 	// The owner of the challenge can terminate it. Don't use this in a real DAO.
 	function terminate() noEther onlyChallengeOwner {
