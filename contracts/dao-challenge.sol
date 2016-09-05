@@ -29,13 +29,12 @@ contract DaoChallenge
 	uint256 public tokenPrice = 1000000000000000; // 1 finney
 
 	mapping (address => DaoAccount) public daoAccounts;
+  // Owner of the challenge; a real DAO doesn't an owner.
+  address public challengeOwner;
 
 	/**************************
 			 Private variables
 	***************************/
-
-	// Owner of the challenge; a real DAO doesn't an owner.
-	address challengeOwner;
 
 	/**************************
 					 Modifiers
@@ -97,7 +96,7 @@ contract DaoChallenge
 	}
 
 	// n: max number of tokens to be issued
-	// price: in szabo, e.g. 1 finney = 1,000 szabo = 0.001 ether
+	// price: in wei, e.g. 1 finney = 0.001 eth = 1000000000000000 wei
 	// deadline: unix timestamp in seconds
 	function issueTokens (uint256 n, uint256 price, uint deadline) noEther onlyChallengeOwner {
 		// Only allow one issuing at a time:
@@ -109,7 +108,7 @@ contract DaoChallenge
 		// Issue at least 1 token
 		if (n == 0) throw;
 
-		tokenPrice = price * 1000000000000;
+		tokenPrice = price;
 		tokenIssueDeadline = deadline;
 		tokensToIssue = n;
 		tokensIssued = 0;
