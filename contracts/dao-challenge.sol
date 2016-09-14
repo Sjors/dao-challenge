@@ -19,6 +19,7 @@ contract DaoChallenge
 	event notifyTransfer(address owner, address recipient, uint256 tokens);
   event notifyPlaceSellOrder(uint256 tokens, uint256 price);
   event notifyCancelSellOrder();
+  event notifyExecuteSellOrder(uint256 tokens, uint256 price);
 
 	/**************************
 	     Public variables
@@ -92,6 +93,12 @@ contract DaoChallenge
 		if (daoAccounts[allegedOwnerAddress] != account) return false;
 		return true;
 	}
+
+  function getBalance () constant noEther returns (uint256) {
+    DaoAccount account = accountFor(msg.sender, false);
+    if (account == DaoAccount(0x00)) return 0;
+    return account.balance;
+  }
 
 	function getTokenBalance () constant noEther returns (uint256 tokens) {
 		DaoAccount account = accountFor(msg.sender, false);
@@ -175,6 +182,29 @@ contract DaoChallenge
     account.cancelSellOrder(order);
 
     notifyCancelSellOrder();
+  }
+
+  function executeSellOrder(address addr) {
+    // Fefuse if no ether is sent. SellOrder checks the exact amount.
+    if (msg.value == 0) throw;
+
+    DaoAccount account = accountFor(msg.sender, true);
+
+    SellOrder order = sellOrders[addr];
+    if (order == SellOrder(0x00)) throw;
+
+    // Don't execute your own oder:
+    if (order.owner() == address(account)) throw;
+
+    uint256 tokens = order.tokens();
+    uint256 price = order.price();
+
+    // If order is successful, forget it (might not be necessary)
+    sellOrders[addr] = SellOrder(0x00);
+
+    account.executeSellOrder.value(msg.value)(order);
+
+    notifyExecuteSellOrder(tokens, price);
   }
 
 	// The owner of the challenge can terminate it. Don't use this in a real DAO.

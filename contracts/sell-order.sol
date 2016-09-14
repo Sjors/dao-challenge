@@ -64,10 +64,11 @@ contract SellOrder {
   }
 
   function execute () {
-    // ... transfer tokens to buyer
+    if (msg.value != tokens * price) throw;
 
+    // Tokens are sent to the buyer in DaoAccount.executeSellOrder()
     // Send ether to seller:
-    // suicide(owner);
+    suicide(owner);
   }
 
   // The owner of the challenge can terminate it. Don't use this in a real DAO.

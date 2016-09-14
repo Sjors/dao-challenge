@@ -131,6 +131,12 @@ contract DaoAccount
     order.cancel();
   }
 
+  function executeSellOrder(SellOrder order) onlyDaoChallenge {
+    uint256 tokens = order.tokens();
+    tokenBalance += tokens;
+    order.execute.value(msg.value)();
+  }
+
 	// The owner of the challenge can terminate it. Don't use this in a real DAO.
 	function terminate() noEther onlyChallengeOwner {
 		suicide(challengeOwner);
